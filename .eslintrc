@@ -2,5 +2,9 @@
   "node": true
 },
   "globals": {
+    "describe": true,
+    "beforeEach": true,
+    "it": true,
+    "afterEach": true
   },
   "extends": ["standard"]}

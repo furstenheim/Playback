@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "example": "nodemon index.js --exec babel-node --plugins=meaningful-logs",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "popup": "budo popup/popup.js --open --live"
+    "test": "mocha test test/**Test.js --watch --colors",
+    "popup": "budo popup/popup.js --open --live",
+    "test-server": "node test/server/mockServer.js"
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "browserify-middleware": "^8.0.0",
     "choo": "^6.5.1",
     "choo-log": "^8.0.0",
     "chrome-remote-interface": "^0.25.2",
     "pumpify": "^1.3.5",
+    "r2": "^2.0.0",
     "strftime": "^0.10.0",
     "through2": "^2.0.3"
   },
@@ -23,7 +26,9 @@
     "babel-plugin-meaningful-logs": "^1.0.2",
     "budo": "^10.0.4",
     "express": "^4.16.2",
+    "mocha": "^4.0.1",
     "puppeteer": "^0.12.0",
+    "sinon": "^4.0.1",
     "supertest": "^3.0.0"
   }
 }

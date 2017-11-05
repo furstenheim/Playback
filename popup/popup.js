@@ -23,6 +23,12 @@ function mainView (state, emit) {
   return html`
     <body>
         <h1>State is ${state.playState}</h1>
+        <div>
+            <div><span>Stop</span></div>
+            <div><span>Record</span></div>
+            <div><span>Play</span></div>
+            <div><span>Pause</span></div>   
+        </div>
     </body>
   `
 }

@@ -12,6 +12,7 @@
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "browserify-middleware": "^8.0.0",
     "btoa": "^1.1.2",
     "choo": "^6.5.1",

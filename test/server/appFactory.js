@@ -3,12 +3,16 @@ const express = require('express')
 const browserify = require('browserify-middleware')
 const port = 3000
 const http = require('http')
+const bodyParser = require('body-parser')
 const model = require('./model')
 const path = require('path')
 function createApp () {
   const app = express()
   app.use('/api/json', function (req, res, next) {
     return res.json(model.json())
+  })
+  app.use('/api/add', bodyParser.json(), function (req, res, next) {
+    return res.json(model.add(req.body))
   })
   app.use(express.static(__dirname))
   app.get('/bundle/main.js', function (req, res, next) {

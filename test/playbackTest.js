@@ -11,7 +11,7 @@ const playback = require('../lib/playback')
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
   console.log('unhandledRejection', error.message)
-  console.error(error.stackTrace)
+  console.error(error.stack)
 })
 
 describe('Playback: ', function () {
@@ -26,7 +26,7 @@ describe('Playback: ', function () {
     app = appFactory.create()
   })
   beforeEach('Launch browser', async function () {
-    this.timeout('10s')
+    this.timeout('30s')
     browser = await puppeteer.launch()
   })
   afterEach('Close browser', function () {
@@ -71,6 +71,9 @@ describe('Playback: ', function () {
       CDP({hosts: options.hostname, port: options.port}, function (client) {
         resolve(client)
       })
+    })
+    client.on('error', function (err) {
+      console.error('Error with client', err)
     })
     const interceptor = new playback.Interceptor({client})
     await interceptor.init()

@@ -7,12 +7,16 @@
     "example": "nodemon index.js --exec babel-node --plugins=meaningful-logs",
     "test": "mocha --no-timeouts test/**Test.js --watch --colors",
     "popup": "budo popup/popup.js --open --live",
-    "test-server": "node test/server/mockServer.js"
+    "test-server": "node test/server/mockServer.js",
+    "build-background": "browserify extension/background.js -o extension/dist/background.js",
+    "watch-build-background": "watchify extension/background.js -o extension/dist/background.js",
+    "local-chromium": "node_modules/puppeteer/.local-chromium/linux-508693/chrome-linux/chrome --remote-debugging-port=9222"
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "browserify": "^14.5.0",
     "browserify-middleware": "^8.0.0",
     "btoa": "^1.1.2",
     "choo": "^6.5.1",

@@ -12,7 +12,9 @@ function createApp () {
     return res.json(model.json())
   })
   app.use('/api/add', bodyParser.json(), function (req, res, next) {
-    return res.json(model.add(req.body))
+    setTimeout(function () {
+      res.json(model.add(req.body))
+    }, 2000)
   })
   app.use(express.static(__dirname))
   app.get('/bundle/main.js', function (req, res, next) {

@@ -4,6 +4,10 @@
 Playback is a chrome browser extension built to help web development.
 When it is activated all post methods in the current tab will be cached avoiding possible round trips to the db.
 
+### Compatible versions of Chrome
+It has been tested with Chromium 64.
+
+It requires experimenta dev tools protocols so it might not work with previous or future versions.
 
 #### From source code
     npm run build-background

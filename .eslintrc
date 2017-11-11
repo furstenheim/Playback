@@ -5,6 +5,7 @@
     "describe": true,
     "beforeEach": true,
     "it": true,
-    "afterEach": true
+    "afterEach": true,
+    "chrome": true
   },
   "extends": ["standard"]}

@@ -94,6 +94,39 @@ describe('Playback: ', function () {
     assert.deepEqual(json2, {example: 1})
     assert.ok(serverModel.json.calledOnce, 'Call should be cached')
   })
+
+  it('Get with caching and no body', async function () {
+    const page = await browser.newPage()
+    await page.goto('http://localhost:3000')
+    const endPoint = browser.wsEndpoint()
+    const options = url.parse(endPoint)
+    const client = await new Promise(function (resolve, reject) {
+      CDP({hosts: options.hostname, port: options.port}, function (client) {
+        resolve(client)
+      })
+    })
+    client.on('error', function (err) {
+      console.error('Error with client', err)
+    })
+    const interceptor = new playback.Interceptor({client})
+    await interceptor.init()
+    assert.ok(serverModel.json.notCalled)
+    page.on('console', msg => console.log('browser log', ...msg.args))
+    const json = await page.evaluate(async function () {
+      const result = await r2.get('http://localhost:3000/api/json').json
+      return result
+    })
+    assert.deepEqual(json, {example: 1})
+    assert.ok(serverModel.json.calledOnce)
+
+    const json2 = await page.evaluate(async function () {
+      const result = await r2.get('http://localhost:3000/api/json').json
+      return result
+    })
+    assert.deepEqual(json2, {example: 1})
+    console.log(serverModel.json.calledOnce)
+    assert.ok(serverModel.json.calledTwice, 'Get should not be cached')
+  })
   it('Visit with no caching and body ', async function () {
     const page = await browser.newPage()
     await page.goto('http://localhost:3000')

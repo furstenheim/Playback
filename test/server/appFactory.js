@@ -11,6 +11,9 @@ function createApp () {
   app.use('/api/json', function (req, res, next) {
     return res.json(model.json())
   })
+  app.get('/api/json', function (req, res, next) {
+    return res.json(model.json())
+  })
   app.use('/api/add', bodyParser.json(), function (req, res, next) {
     setTimeout(function () {
       res.json(model.add(req.body))

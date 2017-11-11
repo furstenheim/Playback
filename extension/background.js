@@ -12,7 +12,16 @@ chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
   }
 })
 
-async function onClick (tab) {
+async function onClick () {
+  const tab = await new Promise(function (resolve, reject) {
+    chrome.tabs.query({
+      windowType: 'normal',
+      active: true,
+      lastFocusedWindow: true
+    }, function (tabs) {
+      resolve(tabs[0])
+    })
+  })
   debug('Selected tab', tab)
   if (activeClients[tab.id]) return cleanUpCaching(tab.id)
   setUpCaching(tab.id)

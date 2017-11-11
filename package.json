@@ -11,7 +11,7 @@
     "test-server": "node test/server/mockServer.js",
     "build-background": "browserify extension/background.js -o extension/dist/background.js",
     "watch-build-background": "watchify extension/background.js -o extension/dist/background.js",
-    "local-chromium": "node_modules/puppeteer/.local-chromium/linux-508693/chrome-linux/chrome --remote-debugging-port=9222"
+    "local-chromium": "node_modules/puppeteer/.local-chromium/linux-508693/chrome-linux/chrome"
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "MIT",

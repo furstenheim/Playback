@@ -11,8 +11,7 @@
   },
   "permissions": [
     "tabs",
-    "debugger",
-    "http://localhost:9222/json/list"
+    "debugger"
   ],
   "icons": {
     "128": "resources/playback128.png",

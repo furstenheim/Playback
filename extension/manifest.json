@@ -13,5 +13,10 @@
     "tabs",
     "debugger",
     "http://localhost:9222/json/list"
-  ]
+  ],
+  "icons": {
+    "128": "resources/playback128.png",
+    "16": "resources/playback16.png",
+    "48": "resources/playback48.png"
+  }
 }

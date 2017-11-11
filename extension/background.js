@@ -1,10 +1,19 @@
-localStorage.debug = 'playback:*'
+window.localStorage.debug = 'playback:*'
 const playback = require('../lib/playback')
-const CDP = require('chrome-remote-interface')
+const debug = require('debug')('playback:background')
 const CDPE = require('../lib/extension-debugging-client')
-async function setUpCaching () {
-  console.log('Starting caching')
-  const tab = await new Promise(function (resolve, reject) {
+
+const activeClients = {}
+
+chrome.browserAction.onClicked.addListener(onClick)
+chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
+  if (!activeClients[tabId]) {
+    chrome.browserAction.setIcon({tabId, path: './resources/play16.png'})
+  }
+})
+
+async function onClick (tab) {
+  /*const tab = await new Promise(function (resolve, reject) {
     chrome.tabs.query({
       windowType: 'normal',
       active: true,
@@ -12,34 +21,30 @@ async function setUpCaching () {
     }, function (tabs) {
       resolve(tabs[0])
     })
-  })
-  console.log(tab)
-  const targets = await new Promise(function (resolve, reject) {
-    chrome.debugger.getTargets(function (targets) {
-      resolve(targets)
-    })
-  })
-  // TODO err
-  const target = targets.find(t => t.tabId === tab.id)
-  console.log(targets)
-  /*const client = await new Promise(function (resolve, reject) {
-    CDP({
-      target: function (targets) {
-        console.log(targets)
-        const remoteTarget = targets.find(t => t.id === target.id)
-        // TODO err
-        console.log(remoteTarget)
-        return remoteTarget
-      }
-    }, client => resolve(client))
   })*/
+  debug('Selected tab', tab)
+  if (activeClients[tab.id]) return cleanUpCaching(tab.id)
+  setUpCaching(tab.id)
+}
+async function setUpCaching (tabId) {
+  debug('Starting caching')
+  activeClients[tabId] = {}
+  chrome.browserAction.setIcon({tabId, path: './resources/playback16.png'})
   const client = await new Promise(function (resolve, reject) {
     CDPE({
-      tabId: tab.id
+      tabId: tabId
     }, client => resolve(client))
   })
 
   const inspector = new playback.Interceptor({client})
   await inspector.init()
 }
-chrome.browserAction.onClicked.addListener(setUpCaching)
+
+async function cleanUpCaching (tabId) {
+  debug('Clearing caching')
+  activeClients[tabId] = null
+  chrome.browserAction.setIcon({tabId, path: './resources/play16.png'})
+}
+
+
+

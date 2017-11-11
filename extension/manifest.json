@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "version": "0.0.1",
-  "name": "playback",
-  "description": "TODO",
+  "name": "Playback",
+  "description": "Easy cache for easier development",
   "background": {
     "scripts": ["dist/background.js"]
   },

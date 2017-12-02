@@ -190,4 +190,48 @@ describe('Playback: ', function () {
     assert.deepEqual(json3, 2)
     assert.ok(serverModel.add.calledTwice, 'Call should be cached')
   })
+
+  it('Caching with race condition on request will be send', async function () {
+    const page = await browser.newPage()
+    await page.goto('http://localhost:3000')
+    const endPoint = browser.wsEndpoint()
+    const options = url.parse(endPoint)
+    const client = await new Promise(function (resolve, reject) {
+      CDP({hosts: options.hostname, port: options.port}, function (client) {
+        resolve(client)
+      })
+    })
+    client.on('error', function (err) {
+      console.error('Error with client', err)
+    })
+    const interceptor = new playback.Interceptor({client})
+    const oldHandler = interceptor.requestWillBeSentHandler
+    sandbox.stub(interceptor, 'requestWillBeSentHandler').callsFake(function (...args) {
+      setTimeout(function () {
+        oldHandler.apply(interceptor, args)
+      }, 200)
+    })
+    await interceptor.init()
+    assert.ok(serverModel.add.notCalled)
+    page.on('console', msg => console.log('browser log', ...msg.args))
+    const json = await page.evaluate(async function () {
+      const result = await r2.post('http://localhost:3000/api/add', {json: {number: 1}}).json
+      return result
+    })
+    assert.deepEqual(json, 2)
+    assert.ok(serverModel.add.calledOnce)
+
+    const json2 = await page.evaluate(async function () {
+      const result = await r2.post('http://localhost:3000/api/add', {json: {number: 3}}).json
+      return result
+    })
+    assert.deepEqual(json2, 4)
+    assert.ok(serverModel.add.calledTwice, 'Call should not be cached')
+    const json3 = await page.evaluate(async function () {
+      const result = await r2.post('http://localhost:3000/api/add', {json: {number: 1}}).json
+      return result
+    })
+    assert.deepEqual(json3, 2)
+    assert.ok(serverModel.add.calledTwice, 'Call should be cached')
+  })
 })
